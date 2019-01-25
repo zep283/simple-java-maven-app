@@ -1,7 +1,5 @@
-def maven = tool 'M3'
-def scanner = tool 'Scanner' 
-
 node('master') {
+    maven = tool 'M3'
     stage('Checkout') {
         checkout scm 
     }
@@ -22,6 +20,7 @@ parallel verify: {
     }
 }, tester: {
     node('slave2') {
+        maven = tool 'M3'
         stage('Test') {
             mvn "test"
             junit 'target/surefire-reports/*.xml'
@@ -29,6 +28,7 @@ parallel verify: {
     }
 }, sAnalysis: {
     node('slave3') {
+        scanner = tool 'Scanner' 
         stage('SonarQube analysis') {
             sonar()
         }
@@ -37,6 +37,7 @@ parallel verify: {
 failFast: true|false
 
 node('master') {
+    maven = tool 'M3'
     stage('QA') {
         timeout(time: 10, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
