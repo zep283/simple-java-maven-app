@@ -1,7 +1,7 @@
-node('master') {
-    maven = tool 'M3'
-    scanner = tool 'Scanner' 
+def maven = tool 'M3'
+def scanner = tool 'Scanner' 
 
+node('master') {
     stage('Checkout') {
         checkout scm 
     }
