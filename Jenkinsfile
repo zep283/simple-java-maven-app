@@ -9,7 +9,11 @@ node {
         mvn "clean install"
     }
     stage('Verification') {
-        authVerify()
+        if (env.BRANCH_NAME == 'multibranch') {
+            echo 'Cannot verify because reasons.'
+        } else {
+            authVerify()
+        }
     }
     stage('Test') {
         mvn "test"
