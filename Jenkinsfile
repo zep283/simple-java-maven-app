@@ -1,5 +1,3 @@
-#!groovy​
-
 node {
     maven = tool 'M3'
     scanner = tool 'Scanner' 
