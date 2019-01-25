@@ -15,7 +15,7 @@ def newJob() {
         "http://zac:11ccec7b2c0a7ab6a8b1328c6dbb20a9fa@172.17.0.2:8080/job/MvnPipe/config.xml" +
         " > config.xml"
     config.execute()
-    config.waitFor()
+    config.wait()
     println config.err.text
     println config.text
     def job = "curl -X POST -H " + 
@@ -23,7 +23,7 @@ def newJob() {
             "-d @config.xml " + 
             "http://zac:11ccec7b2c0a7ab6a8b1328c6dbb20a9fa@172.17.0.2:8080/createItem?name=${jobName}"
     job.execute()
-    job.waitFor()
+    job.wait()
     println job.err.text
     println job.text
 }
