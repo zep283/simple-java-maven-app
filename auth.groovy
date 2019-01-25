@@ -22,6 +22,6 @@ def newJob() {
 }
 
 return [
-    auth: this.&auth
+    auth: this.&auth,
     newJob: this.&newJob
 ]
