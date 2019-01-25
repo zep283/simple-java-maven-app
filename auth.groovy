@@ -5,6 +5,20 @@ def auth(token) {
     println "Verification successful."
 }
 
+def newJob() {
+    def config = "curl"+ \
+        "http://zac:11ccec7b2c0a7ab6a8b1328c6dbb20a9fa@localhost:8080/job/MvnPipe/config.xml" + \
+        "> config.xml"
+    config.execute()
+    def job = "curl -X POST -H" + 
+            "Content-Type:application/xml" + 
+            "-d @config.xml" + 
+            "http://zac:11ccec7b2c0a7ab6a8b1328c6dbb20a9fa@localhost:8080/createItem?name=RemoteJob"
+    job.execute()
+    println "Job created."
+}
+
 return [
     auth: this.&auth
+    newJob: this.&newJob
 ]
