@@ -51,7 +51,7 @@ def authVerify() {
         rootdir = pwd()
         println rootdir
         sh 'ls'
-        method = load "${rootdir}@script/auth.groovy"
+        method = load "${rootdir}/auth.groovy"
         method.auth(USERPASS)
     }
 }
