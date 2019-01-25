@@ -13,7 +13,8 @@ def newJob() {
     println "name set"
     def config = "curl" +
         "http://zac:11ccec7b2c0a7ab6a8b1328c6dbb20a9fa@localhost:8080/job/MvnPipe/config.xml" +
-        "> config.xml".execute()
+        " > config.xml"
+    config.execute()
     println "config generated."
     def job = "curl -X POST -H" + 
             "Content-Type:application/xml" + 
