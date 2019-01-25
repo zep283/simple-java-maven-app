@@ -51,9 +51,6 @@ node('master') {
             sh './jenkins/scripts/deliver.sh'
         }
         artifactory()
-        rootdir = pwd()
-        method = load "${rootdir}/auth.groovy"
-        method.newJob()
     }
 }
 
