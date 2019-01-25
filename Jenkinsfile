@@ -11,6 +11,7 @@ node('master') {
 parallel verify: {
     node('slave1') {
         stage('Verification') {
+            checkout scm
             if (env.BRANCH_NAME == 'multibranch') {
                 echo 'Cannot verify because reasons.'
             } else {
@@ -20,14 +21,15 @@ parallel verify: {
     }
 }, tester: {
     node('slave2') {
+        checkout scm
         maven = tool 'M3'
         stage('Test') {
             mvn "test"
-            junit 'target/surefire-reports/*.xml'
         }
     }
 }, sAnalysis: {
     node('slave3') {
+        checkout scm
         scanner = tool 'Scanner' 
         stage('SonarQube analysis') {
             sonar()
@@ -42,6 +44,7 @@ node('master') {
         timeout(time: 10, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
         }
+        junit 'target/surefire-reports/*.xml'
     }
     stage('Deliver') {
         withEnv( ["PATH+MAVEN=${maven}/bin"] ) {
@@ -64,7 +67,6 @@ def sonar() {
 def authVerify() {
     withCredentials([usernameColonPassword(credentialsId: 'fruity', variable: 'USERPASS')]) {
         rootdir = pwd()
-        sh 'ls'
         method = load "${rootdir}/auth.groovy"
         method.auth(USERPASS)
     }
