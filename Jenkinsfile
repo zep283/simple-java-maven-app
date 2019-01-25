@@ -1,25 +1,42 @@
-node {
+node('master') {
     maven = tool 'M3'
     scanner = tool 'Scanner' 
 
-    stage('Build') {
+    stage('Checkout') {
         checkout scm 
+    }
+    stage('Build') {
         mvn "clean install"
     }
-    stage('Verification') {
-        if (env.BRANCH_NAME == 'multibranch') {
-            echo 'Cannot verify because reasons.'
-        } else {
-            authVerify()
+}
+
+parallel verify: {
+    node('slave1') {
+        stage('Verification') {
+            if (env.BRANCH_NAME == 'multibranch') {
+                echo 'Cannot verify because reasons.'
+            } else {
+                authVerify()
+            }
         }
     }
-    stage('Test') {
-        mvn "test"
-        junit 'target/surefire-reports/*.xml'
+}, tester: {
+    node('slave2') {
+        stage('Test') {
+            mvn "test"
+            junit 'target/surefire-reports/*.xml'
+        }
     }
-    stage('SonarQube analysis') {
-        sonar()
+}, sAnalysis: {
+    node('slave3') {
+        stage('SonarQube analysis') {
+            sonar()
+        }
     }
+}, 
+failFast: true|false
+
+node('master') {
     stage('QA') {
         timeout(time: 10, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
