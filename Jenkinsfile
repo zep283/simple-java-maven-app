@@ -84,6 +84,8 @@ node('master') {
         stage('Failure') {
             if(continuePipe != true) {
                 println "An error has ocurred."
+            } else {
+                println currentBuild.result
             }
         }
     }
