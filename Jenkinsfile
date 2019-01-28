@@ -78,7 +78,7 @@ node('master') {
 } catch(Exception e) {
     err = e
     continuePipe = false
-    currentBuild.result = 'SUCCESS'
+    //currentBuild.result = 'SUCCESS'
     throw err
 } finally {
     node('master') {
