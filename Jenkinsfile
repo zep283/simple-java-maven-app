@@ -81,6 +81,9 @@ node('master') {
     node('master') {
         println "an error has ocurred."
     }
+    if (err) {
+        throw err
+    }
 }
 
 def mvn(args) {
