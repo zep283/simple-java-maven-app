@@ -79,7 +79,9 @@ node('master') {
     println err
 } finally {
     node('master') {
-        println "an error has ocurred."
+        stage('Failure') {
+            println "an error has ocurred."
+        }
     }
     if (err) {
         throw err
