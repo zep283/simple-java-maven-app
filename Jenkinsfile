@@ -1,4 +1,5 @@
 def err = null
+boolean continuePipe = true
 try {
 node('master') {
     /*
@@ -76,9 +77,10 @@ node('master') {
 }
 } catch(Exception e) {
     err = e
-    //currentBuild.result = 'SUCCESS'
+    continuePipe = false
+    currentBuild.result = 'SUCCESS'
 } finally {
-    (currentBuild.result == 'ABORTED') && node('master') {
+    (continuePipe != true) && node('master') {
         stage('Failure') {
             println "An error has ocurred."
         }
