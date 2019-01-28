@@ -76,11 +76,11 @@ node('master') {
 }
 } catch(caughtError) {
     err = caughtError
-    println err
 } finally {
     node('master') {
         stage('Failure') {
-            println "an error has ocurred."
+            println "An error has ocurred."
+            println err
         }
     }
     if (err) {
