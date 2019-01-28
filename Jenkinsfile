@@ -79,7 +79,6 @@ node('master') {
     err = e
     continuePipe = false
     //currentBuild.result = 'SUCCESS'
-    throw err
 } finally {
     node('master') {
         stage('Failure') {
@@ -87,6 +86,9 @@ node('master') {
                 println "An error has ocurred."
             }
         }
+    }
+    if(err) {
+        throw err
     }
 }
 
