@@ -38,7 +38,7 @@ parallel verify: {
     }
 }, tester: {
     node('slave2') {
-        unstash 'project'
+        unstash 'project1'
         maven = tool 'M3'
         stage('Test') {
             mvn "test"
