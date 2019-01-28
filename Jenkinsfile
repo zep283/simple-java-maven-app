@@ -78,15 +78,10 @@ node('master') {
 } catch(Exception e) {
     err = e
     continuePipe = false
-    currentBuild.result = 'SUCCESS'
 } finally {
-    node('master') {
+    (continuePipe != true) && node('master') {
         stage('Failure') {
-            if(continuePipe != true) {
-                println "An error has ocurred."
-            } else {
-                println currentBuild.result
-            }
+            println "An error has ocurred."
         }
     }
     if(err) {
