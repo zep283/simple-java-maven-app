@@ -1,4 +1,12 @@
+def err = null
+try {
 node('master') {
+    /*
+        Initial steps:
+            checkout from github
+            stash full project for later use by slaves
+            build using maven
+    */
     maven = tool 'M3'
     stage('Checkout') {
         checkout scm
@@ -9,6 +17,13 @@ node('master') {
     }
 }
 
+/*
+    Parallel steps:
+        Verification using external groovy script
+        Mvn test
+        Sonarqube analysis
+    Unstash allows all slaves to have adequate environment
+*/
 parallel verify: {
     node('slave1') {
         stage('Verification') {
@@ -39,6 +54,11 @@ parallel verify: {
 }, 
 failFast: true|false
 
+/*
+    Wait for sonarqube to finish analysing
+    Run deliverable script
+    Upload artifacts to artifactory
+*/
 node('master') {
     maven = tool 'M3'
     stage('QA') {
@@ -93,4 +113,15 @@ def artifactory() {
                 }"""
         )
     }               
+}
+} catch(caughtError) {
+    err = caughtError
+    println err
+} finally {
+    node('master') {
+        step([$class: 'Mailer',
+           notifyEveryUnstableBuild: true,
+           recipients: "zachary.pollack@infostretch.com",
+           sendToIndividuals: true])
+    }
 }
