@@ -1,7 +1,8 @@
 node('master') {
     maven = tool 'M3'
     stage('Checkout') {
-        checkout scm 
+        checkout scm
+        stash includes: '**', name: 'project' 
     }
     stage('Build') {
         mvn "clean install"
@@ -11,7 +12,7 @@ node('master') {
 parallel verify: {
     node('slave1') {
         stage('Verification') {
-            checkout scm
+            unstash 'project'
             if (env.BRANCH_NAME == 'multibranch') {
                 echo 'Cannot verify because reasons.'
             } else {
@@ -21,7 +22,7 @@ parallel verify: {
     }
 }, tester: {
     node('slave2') {
-        checkout scm
+        unstash 'project'
         maven = tool 'M3'
         stage('Test') {
             mvn "test"
@@ -29,7 +30,7 @@ parallel verify: {
     }
 }, sAnalysis: {
     node('slave3') {
-        checkout scm
+        unstash 'project'
         scanner = tool 'Scanner' 
         stage('SonarQube analysis') {
             sonar()
