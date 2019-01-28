@@ -80,7 +80,6 @@ node('master') {
     node('master') {
         stage('Failure') {
             println "An error has ocurred."
-            println err
         }
     }
     if (err) {

@@ -1,7 +1,7 @@
 def auth(token) {
     def (usr, pass) = token.split(':')
     assert usr == 'banana'
-    assert pass != 'apple'
+    assert pass == 'apple'
     println "Verification successful."
 }
 
