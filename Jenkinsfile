@@ -1,3 +1,4 @@
+boolean continuePipe = true
 def err = null
 try {
 node('master') {
@@ -74,10 +75,11 @@ node('master') {
         artifactory()
     }
 }
-} catch(caughtError) {
-    err = caughtError
+} catch(Exception e) {
+    err = e
+    continuePipe = false
 } finally {
-    (err != null) && node('master') {
+    (continuePipe != true) && node('master') {
         stage('Failure') {
             println "An error has ocurred."
         }
