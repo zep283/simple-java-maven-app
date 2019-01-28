@@ -79,10 +79,7 @@ node('master') {
     println err
 } finally {
     node('master') {
-        step([$class: 'Mailer',
-           notifyEveryUnstableBuild: true,
-           recipients: "zachary.pollack@infostretch.com",
-           sendToIndividuals: true])
+        println "an error has ocurred."
     }
 }
 
