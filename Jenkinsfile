@@ -35,18 +35,18 @@ parallel verify: {
         stage('SonarQube analysis') {
             sonar()
         }
+        stage('QA') {
+            timeout(time: 10, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
+            junit 'target/surefire-reports/*.xml'
+        }
     }
 }, 
 failFast: true|false
 
 node('master') {
     maven = tool 'M3'
-    stage('QA') {
-        timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
-        junit 'target/surefire-reports/*.xml'
-    }
     stage('Deliver') {
         withEnv( ["PATH+MAVEN=${maven}/bin"] ) {
             sh './jenkins/scripts/deliver.sh'
