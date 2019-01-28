@@ -77,7 +77,7 @@ node('master') {
 } catch(caughtError) {
     err = caughtError
 } finally {
-    node('master') {
+    (err != null) && node('master') {
         stage('Failure') {
             println "An error has ocurred."
         }
