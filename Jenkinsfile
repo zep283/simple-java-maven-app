@@ -74,6 +74,17 @@ node('master') {
         artifactory()
     }
 }
+} catch(caughtError) {
+    err = caughtError
+    println err
+} finally {
+    node('master') {
+        step([$class: 'Mailer',
+           notifyEveryUnstableBuild: true,
+           recipients: "zachary.pollack@infostretch.com",
+           sendToIndividuals: true])
+    }
+}
 
 def mvn(args) {
     withEnv( ["PATH+MAVEN=${maven}/bin"] ) {
@@ -113,15 +124,4 @@ def artifactory() {
                 }"""
         )
     }               
-}
-} catch(caughtError) {
-    err = caughtError
-    println err
-} finally {
-    node('master') {
-        step([$class: 'Mailer',
-           notifyEveryUnstableBuild: true,
-           recipients: "zachary.pollack@infostretch.com",
-           sendToIndividuals: true])
-    }
 }
